@@ -1,0 +1,33 @@
+{
+  "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
+  "meta": {
+    "version": "PLCN_v1",
+    "update_url": null
+  },
+  "exported_at": "2025-06-30T20:12:49+00:00",
+  "name": "scpcs",
+  "author": "",
+  "uuid": "92943e98-c0f8-4968-bc33-2bfac89feb19",
+  "description": null,
+  "tags": [],
+  "features": [],
+  "docker_images": {
+    "Ubuntu Server": "ghcr.io/pterodactyl/games:source"
+  },
+  "file_denylist": [],
+  "startup": "./LinuxServer_Core.x86_64",
+  "config": {
+    "files": "{}",
+    "startup": "{\r\n    \"done\": \"Generating map with seed\"\r\n}",
+    "logs": "{}",
+    "stop": "^^C"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\r\n# Install SCP: Classified Site Servers\r\n\r\nDOWNLOAD_URL=https://ftp.alobgames.com/scpcs/servers/Linux.zip\r\n\r\ncd /mnt/server\r\n\r\napt-get -qq update\r\napt-get -qq install -y zip unzip wget\r\n\r\nif ! [ -d /mnt/server/LinuxServer_Core_Data ]; then\r\n#rm -rf *\r\necho -e \"Процесс установки начат\"\r\nwget --progress=dot https://ftp.alobgames.com/scpcs/servers/Linux.zip\r\necho -e \"Архив скачан\"\r\nunzip Linux.zip && rm Linux.zip\r\necho -e \"Архив распакован\"\r\necho \"server_name: Public Server\" > config.ini\r\necho \"platforms: pc, mobile\" >> config.ini\r\necho \"maxplayers: 20\" >> config.ini\r\necho \"port: ${SERVER_PORT}\" >> config.ini\r\necho \"serverinfo_pastebin_id: \" >> config.ini\r\necho \"isPrivate: false\" >> config.ini\r\necho \"restart_time: 10\" >> config.ini\r\necho \"lobby_waiting_time: 30\" >> config.ini\r\necho \"\" > admins.ini\r\necho \"\" > bans.ini\r\n\r\nchmod +x ./LinuxServer_Core.x86_64\r\n\r\necho \"======\"\r\necho \"SCP: Classified Site Server - Installed\"\r\nelse\r\nmkdir backup\r\nmkdir ./backup/Plugins\r\ncp *.ini ./backup\r\ncp ./Plugins/* ./backup/Plugins\r\necho -e \"Обновление\"\r\nwget --progress=dot https://github.com/AIzyka/scp-cs-data/releases/latest/download/Server_Linux64.zip\r\necho -e \"Архив скачан\"\r\nunzip -o Server_Linux64.zip\r\necho -e \"Архив распакован\"\r\nrm Server_Linux64.zip\r\necho -e \"Архив удалён\"\r\nchmod +x ./LinuxServer_Core.x86_64\r\necho -e \"Выданы права запуска\"\r\ncp ./backup/*.ini ./ \r\nmkdir Plugins\r\ncp ./backup/Plugins/* ./Plugins\r\nrm -rf backup\r\necho -e \"Бекап скопирован\"\r\nfi",
+      "container": "ghcr.io/pterodactyl/installers:debian",
+      "entrypoint": "bash"
+    }
+  },
+  "variables": []
+}
